@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface TaskType extends Document {
+export interface taskType extends Document {
   title: string;
   startTime: Date;
   endTime: Date;
@@ -15,5 +15,5 @@ const TaskSchema: Schema = new Schema({
   priority: { type: Number, required: true, min: 1, max: 5 },
   status: { type: String, required: true, enum: ['pending', 'finished'] },
 });
-
-export default mongoose.model<TaskType>('Task', TaskSchema);
+const Task = mongoose.model<taskType>('Tasks', TaskSchema,"Tasks");
+export default Task

@@ -18,10 +18,5 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
-  },
-  "dependencies": {
-    "@types/mongoose": "^5.11.96",
-    "dotenv": "^16.4.5",
-    "mongoose": "^8.8.3"
   }
 }
