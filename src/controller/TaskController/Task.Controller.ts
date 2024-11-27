@@ -16,3 +16,29 @@ export const createTask = async (req:Request, res:Response) => {
     }
 }
 
+//finction to get and filter the taskes
+export const getTasks = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { priority, status, sortField, sortOrder } = req.query;
+       
+      // Parse query parameters
+      const filters: { priority?: number; status?: 'pending' | 'finished' } = {};
+      
+      if (priority) filters.priority = parseInt(priority as string, 10);
+      if (status) filters.status = status as 'pending' | 'finished';
+      const validSortField: 'startTime' | 'endTime' = 
+      sortField === 'endTime' ? 'endTime' : 'startTime';
+      const tasks = await TaskService.getTasks(
+        filters,
+       validSortField,
+        (sortOrder as 'asc' | 'desc') || 'asc',
+        req.body.userId
+      
+    );
+  
+      res.status(200).json(tasks);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
