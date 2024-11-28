@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 server.use(express.json());
 
 const corsOptions = {
-    origin: 'https://task-management-system-six-pied.vercel.app/',  
+    origin: 'https://task-management-system-six-pied.vercel.app',  
   };
   
 server.use(cors(corsOptions));
