@@ -65,10 +65,11 @@ class TaskService {
     async getTasksWithComputedFields(
         filters: { priority?: number; status?: 'pending' | 'finished' },
         sortField: 'startTime' | 'endTime' = 'startTime',
-        sortOrder: 'asc' | 'desc' = 'asc'
+        sortOrder: 'asc' | 'desc' = 'asc',
+        userId:string
       ): Promise<(any)[]> {
         const query: any = {};
-    
+        query.userId = new mongoose.Types.ObjectId(userId)
         if (filters.priority) query.priority = filters.priority;
         if (filters.status) query.status = filters.status;
     
@@ -110,6 +111,45 @@ class TaskService {
       { new: true, runValidators: true } // Return the updated document and validate updates
     );
     return task;
+  }
+
+   // Get dashboard statistics
+   async getDashboardStatistics(userId:string): Promise<any> {
+    const query: any = {};
+    query.userId = new mongoose.Types.ObjectId(userId)
+    const tasks = await Task.find(query);
+    console.log(tasks)
+
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(task => task.status === 'finished').length;
+    const pendingTasks = tasks.filter(task => task.status === 'pending').length;
+
+    const pendingByPriority = Array.from({ length: 5 }, (_, i) => {
+      const priority = i + 1;
+      const priorityTasks = tasks.filter(task => task.priority === priority && task.status === 'pending');
+      const timeLapsed = priorityTasks.reduce((acc, task) => acc + (Date.now() - task.startTime.getTime()) / (1000 * 60 * 60), 0); // In hours
+      const balanceEstimate = priorityTasks.reduce((acc, task) => {
+        const remainingTime = (task.endTime.getTime() - Date.now()) / (1000 * 60 * 60);
+        return acc + Math.max(remainingTime, 0);
+      }, 0);
+      return { priority, timeLapsed, balanceEstimate };
+    });
+
+    const avgCompletionTime =
+      completedTasks > 0
+        ? tasks
+            .filter(task => task.status === 'finished')
+            .reduce((acc, task) => acc + (task.endTime.getTime() - task.startTime.getTime()) / (1000 * 60 * 60), 0) /
+          completedTasks
+        : 0;
+
+    return {
+      totalCount: totalTasks,
+      completedPercent: (completedTasks / totalTasks) * 100,
+      pendingPercent: (pendingTasks / totalTasks) * 100,
+      pendingByPriority,
+      avgCompletionTime,
+    };
   }
 
 

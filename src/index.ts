@@ -11,10 +11,7 @@ const port = process.env.PORT || 3000;
 server.use(express.json());
 
 const corsOptions = {
-    origin: 'http://localhost:5173/', 
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'application/json', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
-    credentials: true
+    origin: ' http://localhost:5173',  
   };
   
 server.use(cors(corsOptions));

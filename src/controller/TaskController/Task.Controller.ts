@@ -69,7 +69,7 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
       if (priority) filters.priority = parseInt(priority as string, 10);
       if (status) filters.status = status as 'pending' | 'finished';
   
-      const tasks = await TaskService.getTasksWithComputedFields(filters, sortField as 'startTime' | 'endTime', sortOrder as 'asc' | 'desc');
+      const tasks = await TaskService.getTasksWithComputedFields(filters, sortField as 'startTime' | 'endTime', sortOrder as 'asc' | 'desc', req.body.userId);
   
       res.status(200).json(tasks);
     } catch (error: any) {
@@ -110,5 +110,18 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
       res.status(200).json(updatedTask);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
+    }
+  }
+
+
+  export const getDashboardStats = async (req:Request, res:Response) => {
+    const { userId } = req.body;
+    console.log(userId)
+    try {
+      const stats = await TaskService.getDashboardStatistics(userId);
+      
+      res.status(200).json(stats);
+    } catch (error:any) {
+      res.status(400).json({ error: error.message });
     }
   }

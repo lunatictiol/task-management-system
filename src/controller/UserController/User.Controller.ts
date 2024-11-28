@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '../../middleware/autth.middleware';
 
 export const login = async (req:Request,res:Response) => {
+  res.header("Access-Control-Allow-Origin", "*")
     try {
       const { email, password } = req.body;
       if (!email || !password) {

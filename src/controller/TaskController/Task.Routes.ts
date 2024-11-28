@@ -1,5 +1,5 @@
 import * as express from "express";
-import { createTask, deleteTasks, getTasks, getTaskwithTime, updateTask } from "./Task.Controller";
+import { createTask, deleteTasks, getDashboardStats, getTasks, getTaskwithTime, updateTask } from "./Task.Controller";
 
 const taskRouter = express.Router()
 
@@ -13,16 +13,19 @@ taskRouter.get('/', getTasks);
 
 
 //delete tasks
-taskRouter.delete('/delete',deleteTasks );
+taskRouter.post('/delete',deleteTasks );
 
 
 
 //tasks with estimated time and timeelapsed
-taskRouter.get('/detailed',getTaskwithTime );
+taskRouter.post('/detailed',getTaskwithTime );
 
 
 // Partially update a task
 taskRouter.patch('/:id',updateTask );
+
+// Get dashboard statistics
+taskRouter.post('/dashboard',getDashboardStats );
   
 
 export default taskRouter;
